@@ -13,4 +13,5 @@ export const env = cleanEnv(process.env, {
   DB_SYNC: bool(),
   GOOGLE_CLIENT_ID: str(),
   GOOGLE_CLIENT_SECRET: str(),
+  JWT_SECRET: str(),
 });
