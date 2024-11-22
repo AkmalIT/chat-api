@@ -1,20 +1,19 @@
+import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 import { AppModule } from './app.module';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { env } from './common/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    bodyParser: true,
-    cors: true,
-  });
-  app.enableVersioning({
-    type: VersioningType.URI,
+  const app = await NestFactory.create(AppModule);
+
+  app.enableCors({
+    origin: '*',
+    credentials: true,
   });
 
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-  app.enableShutdownHooks();
-
+  app.useWebSocketAdapter(new IoAdapter(app));
+  app.useLogger(new Logger());
   await app.listen(env.PORT, () =>
     console.log(`Server started on port ${env.PORT}`),
   );

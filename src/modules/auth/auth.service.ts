@@ -3,11 +3,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { User } from './entity/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcryptjs';
+import { env } from 'src/common/config';
+import { Repository } from 'typeorm';
+import { User } from './entity/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -18,8 +19,8 @@ export class AuthService {
   ) {}
 
   private generateTokens(payload: { userId: string; email: string }) {
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '15m', secret: env.JWT_SECRET });
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d', secret: env.JWT_SECRET });
     return { accessToken, refreshToken };
   }
 
@@ -117,5 +118,10 @@ export class AuthService {
 
   async validateUser(userId: string): Promise<User | null> {
     return this.userRepository.findOne({ where: { id: userId } });
+  }
+
+  public verifyTokens(token: string) {
+    const payload = this.jwtService.verify(token, { secret: env.JWT_SECRET });
+    return payload;
   }
 }

@@ -1,7 +1,9 @@
+import { User } from 'src/modules/auth/entity/user.entity';
+import { Chat } from 'src/modules/chat/entity/chat.entity';
+import { Message } from 'src/modules/chat/entity/message.entity';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { env } from '../config';
 import { SnakeNamingStrategy } from './namingStrategy.config';
-import { User } from 'src/modules/auth/entity/user.entity';
 
 export const dbConfig: PostgresConnectionOptions = {
   type: 'postgres',
@@ -11,7 +13,7 @@ export const dbConfig: PostgresConnectionOptions = {
   password: env.DB_PASSWORD,
   database: env.DB_NAME,
   namingStrategy: new SnakeNamingStrategy(),
-  entities: [User],
+  entities: [User, Chat, Message],
   synchronize: env.DB_SYNC,
   logger: 'advanced-console',
   logging: ['error', 'warn'],

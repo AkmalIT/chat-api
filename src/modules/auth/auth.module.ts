@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-import { AuthService } from './auth.service';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { AuthController } from './auth.controller';
-import { GoogleStrategy } from './strategies/google.strategy';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entity/user.entity';
 import { env } from 'src/common/config';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { User } from './entity/user.entity';
+import { GoogleStrategy } from './strategies/google.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -16,7 +16,8 @@ import { env } from 'src/common/config';
       signOptions: { expiresIn: '1h' },
     }),
   ],
-  providers: [AuthService, JwtStrategy, GoogleStrategy],
   controllers: [AuthController],
+  providers: [AuthService, JwtStrategy, GoogleStrategy, JwtService],
+  exports: [AuthService, JwtService],
 })
 export class AuthModule {}

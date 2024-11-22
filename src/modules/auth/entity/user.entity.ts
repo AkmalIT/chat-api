@@ -1,5 +1,7 @@
 import { AbstractEntity } from 'src/common/database/abstract.entity';
-import { Entity, Column } from 'typeorm';
+import { Chat } from 'src/modules/chat/entity/chat.entity';
+import { Message } from 'src/modules/chat/entity/message.entity';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('users')
 export class User extends AbstractEntity {
@@ -17,4 +19,10 @@ export class User extends AbstractEntity {
 
   @Column({ nullable: true })
   refreshToken: string;
+
+  @OneToMany(() => Message, (message) => message.user)
+  messages: Message[];
+
+  @OneToMany(() => Chat, (chat) => chat.user)
+  chats: Chat[];
 }
