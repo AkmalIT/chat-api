@@ -23,6 +23,9 @@ export class User extends AbstractEntity {
   @OneToMany(() => Message, (message) => message.user)
   messages: Message[];
 
-  @OneToMany(() => Chat, (chat) => chat.user)
+  @OneToMany(() => Chat, (chat) => chat.user, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   chats: Chat[];
 }

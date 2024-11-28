@@ -1,9 +1,9 @@
-import { Controller, Post, Body, Req, UseGuards, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -22,6 +22,17 @@ export class AuthController {
     return await this.authService.login(loginDto.email, loginDto.password);
   }
 
+  @Post('refresh')
+  async refresh(@Body('refreshToken') refreshToken: string) {
+    return await this.authService.refreshTokens(refreshToken);
+  }
+
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  async logout(@Req() req) {
+    return await this.authService.logout(req.user.id, req.user.refreshToken);
+  }
+
   @Get('google')
   @UseGuards(GoogleAuthGuard)
   async googleAuth() {}
@@ -30,11 +41,6 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   async googleAuthRedirect(@Req() req) {
     return req.user;
-  }
-
-  @Post('refresh')
-  async refresh(@Body('refreshToken') refreshToken: string) {
-    return await this.authService.refreshTokens(refreshToken);
   }
 
   @Get('profile')

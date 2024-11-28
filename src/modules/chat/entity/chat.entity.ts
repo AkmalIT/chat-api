@@ -11,6 +11,10 @@ export class Chat extends AbstractEntity {
   @ManyToOne(() => User, (user) => user.chats, { eager: true })
   user: User;
 
-  @OneToMany(() => Message, (message) => message.chat, { cascade: true })
+  @OneToMany(() => Message, (message) => message.chat, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   messages: Message[];
 }

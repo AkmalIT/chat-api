@@ -208,7 +208,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client.emit('joined_chat', {
         chatId,
         name: chat.title,
-        messages: chat.messages,
+        messages: chat.messages.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        ),
         message: 'Successfully joined chat',
       });
 

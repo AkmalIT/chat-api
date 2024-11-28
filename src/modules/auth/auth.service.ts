@@ -19,8 +19,14 @@ export class AuthService {
   ) {}
 
   private generateTokens(payload: { userId: string; email: string }) {
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '15m', secret: env.JWT_SECRET });
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d', secret: env.JWT_SECRET });
+    const accessToken = this.jwtService.sign(payload, {
+      expiresIn: '15m',
+      secret: env.JWT_SECRET,
+    });
+    const refreshToken = this.jwtService.sign(payload, {
+      expiresIn: '7d',
+      secret: env.JWT_SECRET,
+    });
     return { accessToken, refreshToken };
   }
 
@@ -89,6 +95,15 @@ export class AuthService {
     await this.userRepository.save(user);
 
     return { accessToken, refreshToken };
+  }
+
+  async logout(id: string, refreshToken: string) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    user.refreshToken = null;
+    return await this.userRepository.save(user);
   }
 
   async refreshTokens(refreshToken: string) {
