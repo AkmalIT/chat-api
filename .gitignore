@@ -2,7 +2,16 @@
 /dist
 /node_modules
 /build
-/ai_chat_env
+
+#ai
+/ai_chat_env/bin
+/ai_chat_env/include
+/ai_chat_env/lib
+/ai_chat_env/lib64
+/ai_chat_env/models 
+/ai_chat_env/share
+/ai_chat_env/pyvenv.cfg
+
 
 # Logs
 logs
